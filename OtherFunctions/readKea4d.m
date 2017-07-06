@@ -32,31 +32,33 @@ p.qDim                    =fread(fileid,1,'int32'); %size qDim
 
 % need to adjust some of these sections to get the data output correctly,
 % reshaping and realigning matrices, etc. Specifically, 502-504.
-if p.dataType == 500; %(4) byte float array (r,r,r ...)
+if p.dataType == 500 %(4) byte float array (r,r,r ...)
     readSize = p.xDim*p.yDim*p.zDim*p.qDim*4;
     p.data = fread(fileid,readSize,'float32');
     data = p.data;
-elseif p.dataType == 501; %(4,4) byte complex array (r,i,r,i ...)
+elseif p.dataType == 501 %(4,4) byte complex array (r,i,r,i ...)
     readSize = p.xDim*p.yDim*p.zDim*p.qDim*8;
     p.data = fread(fileid,readSize,'float32');
     dataHold = reshape(p.data,2,readSize/8);
     p.Re = dataHold(1,:);
     p.Im = dataHold(2,:);
     data = complex(p.Re,p.Im)';
-elseif p.dataType == 502; %(8) byte double array (r,r,r ...)
+elseif p.dataType == 502 %(8) byte double array (r,r,r ...)
     readSize = p.xDim*p.yDim*p.zDim*p.qDim*8;
     p.data = fread(fileid,readSize,'double');
-elseif p.dataType == 503; %(4),(4) byte float x-y array (x1,x2,x3,...), (y1,y2,y3,...)
+elseif p.dataType == 503 %(4),(4) byte float x-y array (x1,x2,x3,...), (y1,y2,y3,...)
     readSize = p.xDim*p.yDim*p.zDim*p.qDim*2;
     dataHold = fread(fileid,readSize,'float32');
     p.data(:,1) = dataHold(1:readSize/2);
     p.data(:,2) = dataHold(readSize/2+1:end);
     data = p.data;
-elseif p.dataType == 504; %(4),(4,4) byte float,complex array (x1,x2,x3,...)(r1,i1,r2,i2,r3,i3,...)
+elseif p.dataType == 504 %(4),(4,4) byte float,complex array (x1,x2,x3,...)(r1,i1,r2,i2,r3,i3,...)
     readSize = p.xDim*p.yDim*p.zDim*p.qDim*12;
     p.data = fread(fileid,readSize,'float32');
 end
 
+
+fclose(fileid);
 
 end
 % %%

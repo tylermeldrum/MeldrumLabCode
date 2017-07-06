@@ -4,7 +4,7 @@ close all
 
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = 'Z:\Data\TKM\WMO_2017\CPMG\P250.2015f\5\';
+filedir = '/Users/tyler/Desktop/M001/0/';
 
 omitEchoes = 0; %front-end echoes to omit
 % END USER-DEFINED PARAMETERS
