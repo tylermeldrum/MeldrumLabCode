@@ -43,13 +43,20 @@ for nn = 1:nMeas
     fitdataM = abs(fitdata);
 
     
+    try    
+        [beta,R,J,CovB] = nlinfit(echoVec,fitdataR./fitdataR(1), @t2monofit, guess);
+        ci = nlparci(beta,R,'jacobian',J);
+        guess = beta;
         
-    [beta,R,J,CovB] = nlinfit(echoVec,fitdataR./fitdataR(1), @t2monofit, guess);
-    ci = nlparci(beta,R,'jacobian',J);
-    guess = beta;
+        T2(nn,1) = beta(3);
+        T2(nn,2) = beta(3)-ci(3,1);
+    catch
+        T2(nn,1) = NaN;
+        T2(nn,2) = NaN;
+    end
+        
     
-    T2(nn,1) = beta(3);
-    T2(nn,2) = beta(3)-ci(3,1);
+
 end
 %%
 close all
