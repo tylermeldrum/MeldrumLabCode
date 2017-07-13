@@ -5,17 +5,17 @@ close all
 %%
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = '/Users/tyler/Desktop/M001/';
+filedir = 'Z:\Data\JYU\CPMG (summer 2017)\6July\IvoryBlack_overnight\';
 
-nMeas = 650;
+nMeas = 16;
 nSmooth = 21;
 
 omitEchoes = 0; %front-end echoes to omit
 
-guess = [0 1 0.0003]; %[y-offset, amplitude, T2 in s]
+guess = [0 1 0.008]; %[y-offset, amplitude, T2 in s]
 
-t0 = datetime('05-Jul-2017 16:10:00');
-tEnd = datetime('06-Jul-2017 06:54:00');
+t0 = datetime('06-Jul-2017 17:01:00');
+tEnd = datetime('07-Jul-2017 09:15:00');
 % END USER-DEFINED PARAMETERS
 
 tElapsed = tEnd - t0;
@@ -43,13 +43,20 @@ for nn = 1:nMeas
     fitdataM = abs(fitdata);
 
     
+    try    
+        [beta,R,J,CovB] = nlinfit(echoVec,fitdataR./fitdataR(1), @t2monofit, guess);
+        ci = nlparci(beta,R,'jacobian',J);
+        guess = beta;
         
-    [beta,R,J,CovB] = nlinfit(echoVec,fitdataR./fitdataR(1), @t2monofit, guess);
-    ci = nlparci(beta,R,'jacobian',J);
-    guess = beta;
+        T2(nn,1) = beta(3);
+        T2(nn,2) = beta(3)-ci(3,1);
+    catch
+        T2(nn,1) = NaN;
+        T2(nn,2) = NaN;
+    end
+        
     
-    T2(nn,1) = beta(3);
-    T2(nn,2) = beta(3)-ci(3,1);
+
 end
 %%
 close all

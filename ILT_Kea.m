@@ -8,26 +8,35 @@ close all
 % and the second is the signal intensity at that point. You should select
 % alpha manually, uaually between 1e6 and 1e10.
 
-filedir = '/Users/tyler/Dropbox/Data/NGA/NGA_5June2015/Atlas9pARLO_1024/1/';
+%
+filename = 'data.2d';
+filedir = 'Z:\Data\MTR\Paint\PhthaloBlue49.54%Slide3echotime60\1\';
+omitEchoes = 0;
+alpha = 1e8;
+lowLim = 1e-5; %s
+hiLim = 1e0;  %s
+%
 
-cd(filedir)
-filename = 'data.csv';
-parname = 'acqu';
-alpha = 1e9;
-omitpoints = 0;
+fileloc = strcat(filedir,filename);
+parloc  = strcat(filedir,'acqu.par');
 
-data = load(filename);
-echoVector = data(omitpoints+1:end,1)/1e6;
-realData = data(omitpoints+1:end,2)./max(data(omitpoints+1:end,2));
+[ap,spec] = readKea4d(fileloc);
+tE = readpar_Kea(parloc,'echoTime')*1e-6;
+tD = readpar_Kea(parloc,'dwellTime')*1e-6;
+nrEchoes = ap.yDim;
+nrPts = ap.xDim;
 
-lowLim = 10^-4; %s
-hiLim = 10^-2;  %s
-nrILTSteps = min(128,length(echoVector));
+echoVec = (omitEchoes+1)*tE:tE:nrEchoes*tE;
+spec2d = reshape(spec,nrPts,nrEchoes);
+spec2d = spec2d(:,omitEchoes+1:end);
 
-scatter(echoVector,realData)
+nrILTSteps = min(128,length(echoVec));
+realData = sum(abs(spec2d),1);
+
+scatter(echoVec,realData)
 
 kernel1 = 'exp(-h/T)';
-[spectrum,tau] = upnnlsmooth1D(realData,echoVector,  lowLim, hiLim, alpha ,  -1,  nrILTSteps,kernel1);
+[spectrum,tau] = upnnlsmooth1D(realData',echoVec',  lowLim, hiLim, alpha ,  -1,  nrILTSteps,kernel1);
 
 spectrum = spectrum./sum(spectrum);
 

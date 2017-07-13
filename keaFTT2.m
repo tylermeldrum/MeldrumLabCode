@@ -4,7 +4,7 @@ close all
 
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = 'C:\Users\jnking01\Desktop\10uspwUFT2Dtest\Glycerol_CPMG_21Oct2016\1\';
+filedir = 'Z:\Data\MTR\Paint\PhthaloBlue10.14%Slide2echotime60\1\';
 omitEchoes = 0; %front-end echoes to omit
 G = 23.87; %T/m
 zf = 0; %levels of zero-filling
