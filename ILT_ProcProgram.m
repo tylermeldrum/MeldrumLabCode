@@ -6,7 +6,7 @@ close all
 % catch
 % end
 % Load data
-filedir = '/Users/tyler/Dropbox/Data/NGA/NGA_5June2015/Atlas9pARLO_1024/1/';
+filedir = 'C:\CommonData\ADF\Summer 17\Gly Test\Gly CPMG\Glycerol_CPMG_middle_12JUL2017_result.tnt ';
 
 cd(filedir)
 filename = 'data.csv';

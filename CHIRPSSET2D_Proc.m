@@ -12,13 +12,13 @@ close all
 
 spectrometer = 'Tecmag'; %'Tecmag' OR 'Kea'
 
-datadir = 'Z:\Backup\ADF\Tyler Data\EtGly\';
-datafile = 'CHIRP_1_15May2017_result'; %\1\data'; 
-noCHIRPfile = 'noCHIRP_1_15May2017_result'; %\1\data'; 
+datadir = 'C:\CommonData\ADF\Summer 17\Gly Test\Grids\';
+datafile = 'Gly_16_CHIRP_1_12JUL2017_result'; %\1\data'; 
+noCHIRPfile = 'Gly_16_noCHIRP_1_12JUL2017_result'; %\1\data'; 
 
-Pchirp = 2.477e-3;                  % CHIRP Pulse Length (s)
+Pchirp = 1977e-6;                  % CHIRP Pulse Length (s)
 pw     = 6e-6;                      % hard pulse length
-sliceheight = 0.200;                % mm
+sliceheight = 0.300;                % mm
 
 rampPct = 0.0;                     % percent for the CHIRP power ramp to reach pMax
 
@@ -32,7 +32,7 @@ omitEchoes = 0;                     % number of echoes to remove from dat0
 echoChoice = 2;                     %the echo to use for display purposes
 
 tD = 4e-6;                          % dwell time (Tecmag shows correct dwell time for a complex point, no need to multiply by 2)
-tE = 700-6;                           % us
+tE = 700e-6;                           % us
 preCHIRPdelay = 20e-6;             % s
 noisePoints = 2;                    % number of points for measuring noise
 
@@ -48,8 +48,8 @@ apofac = 5;                         % Amount of Apodizatio
 
 
 
-delta = 5e-3;                       % little delta time (s)
-DELTA = 30e-3;                       % Big delta time in s
+delta = 4e-3;                       % little delta time (s)
+DELTA = 25e-3;                       % Big delta time in s
 
 
 % ===================================
@@ -245,7 +245,7 @@ deltaFig = 2*Pchirp*(BWchirp/2-f)/BWchirp + deltaMin; % expression for delta(eff
 wurstAmp = 1-(cos(pi*(t1_fig7)/Pchirp)).^40;
 
 
-ylimits = [0 0.8];
+ylimits = [0 3];
 deltaEff = 2*t1_fig7 ;
 % deltaEff = delta - t1_fig7 - preCHIRPdelay;
 deltaEff = fliplr(deltaEff);
@@ -303,8 +303,8 @@ ylim(ylimits)
 xlabel('z (um)')
 %% Data Range and Inversion
 
-minind = 198; %min(ptIndex);
-maxind = 322; %max(ptIndex); 
+minind = 212; %min(ptIndex);
+maxind = 302; %max(ptIndex); 
 
 
 
