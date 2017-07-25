@@ -4,7 +4,7 @@ close all
 
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = '/Users/tyler/Desktop/M001/0/';
+filedir = 'Z:\Data\JYU\CPMG (summer 2017)\17July\WMO_Orange_2\3\';
 
 omitEchoes = 0; %front-end echoes to omit
 % END USER-DEFINED PARAMETERS
@@ -24,7 +24,7 @@ spec2d = spec2d(:,omitEchoes+1:end);
 fitdata = sum(real(spec2d),1);
 
 
-guess = [0 1 0.0002]; %T2 in s
+guess = [0 1 0.00002]; %T2 in s
 [beta,R,J,CovB] = nlinfit(echoVec,fitdata./fitdata(1), @t2monofit, guess);
 ci = nlparci(beta,R,'jacobian',J);
 

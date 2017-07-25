@@ -4,7 +4,7 @@ close all
 
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = 'Z:\Data\MTR\Paint\PhthaloBlue10.14%Slide2echotime60\1\';
+filedir = 'Z:\Data\JYU\CPMG (summer 2017)\31May\TO_Red_2\3\';
 omitEchoes = 0; %front-end echoes to omit
 G = 23.87; %T/m
 zf = 0; %levels of zero-filling

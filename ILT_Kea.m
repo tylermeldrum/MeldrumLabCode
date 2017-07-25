@@ -10,7 +10,7 @@ close all
 
 %
 filename = 'data.2d';
-filedir = 'Z:\Data\MTR\Paint\PhthaloBlue49.54%Slide3echotime60\1\';
+filedir = 'Z:\Data\MRB\CPMG\10_July_2017_100%PEGDA_2%HCPK_1%PPh3\30s_40%_Slide1\2\';
 omitEchoes = 0;
 alpha = 1e8;
 lowLim = 1e-5; %s
