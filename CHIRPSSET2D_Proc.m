@@ -12,31 +12,31 @@ close all
 
 spectrometer = 'Tecmag'; %'Tecmag' OR 'Kea'
 
-datadir = 'C:\CommonData\ADF\Summer 17\Gly Test\Grids\';
-datafile = 'Gly_16_CHIRP_1_12JUL2017_result'; %\1\data'; 
-noCHIRPfile = 'Gly_16_noCHIRP_1_12JUL2017_result'; %\1\data'; 
+datadir = 'C:\Users\tkmeldrum\Desktop\DNP_Water\';
+datafile = 'DNPWater_Channels_chirpSTE_22Apr2016_2'; %\1\data'; 
+noCHIRPfile = 'DNPWater_Channels_nochirpSTE_21Apr2016_1'; %\1\data'; 
 
-Pchirp = 1977e-6;                  % CHIRP Pulse Length (s)
+Pchirp = 193.8e-6;                  % CHIRP Pulse Length (s)
 pw     = 6e-6;                      % hard pulse length
-sliceheight = 0.300;                % mm
+sliceheight = 0.200;                % mm
 
-rampPct = 0.0;                     % percent for the CHIRP power ramp to reach pMax
+rampPct = 0.01;                     % percent for the CHIRP power ramp to reach pMax
 
 
-nPts = 78;                          % # of acqu points
+nPts = 54;                          % # of acqu points
 
 omitPtsBack = 0;                    % the number of points at the end of each echo window that are zeros from the spectrometer
 omitPtsFront = 0;                    % the number of points at the beginning of each echo window to zero
-nEchoes = 128;                      % Echoes
+nEchoes = 64;                      % Echoes
 omitEchoes = 0;                     % number of echoes to remove from dat0
-echoChoice = 2;                     %the echo to use for display purposes
+echoChoice = 1;                     %the echo to use for display purposes
 
-tD = 4e-6;                          % dwell time (Tecmag shows correct dwell time for a complex point, no need to multiply by 2)
-tE = 700e-6;                           % us
-preCHIRPdelay = 20e-6;             % s
+tD = 6e-6;                          % dwell time (Tecmag shows correct dwell time for a complex point, no need to multiply by 2)
+tE = 400-6;                           % us
+preCHIRPdelay = 200e-9;             % s
 noisePoints = 2;                    % number of points for measuring noise
 
-nScans = 4096;                     % Number of scans in the experiment
+nScans = 1;                     % Number of scans in the experiment
 cutRefPts = 0;                     %if necessary, can cut the data from the reference scan by half this value on each end of the acq window
                                     %use only if nPts for CHIRP on and CHIRP off expts don't match
 
@@ -48,8 +48,8 @@ apofac = 5;                         % Amount of Apodizatio
 
 
 
-delta = 4e-3;                       % little delta time (s)
-DELTA = 25e-3;                       % Big delta time in s
+delta = 400e-6;                       % little delta time (s)
+DELTA = 5e-3;                       % Big delta time in s
 
 
 % ===================================
@@ -124,7 +124,7 @@ CHIRPdat = padarray(CHIRPdat, size(CHIRPdat(:,1),1)/2*((2^zf)-1),0); % Pad with 
 T2Dprofiles = (fftshift(fft(CHIRPdat,NFFT)/L, 1)); % Performs FFT algorithm
 
 %% Plot CHIRP results
-figure(1)
+ff1 = figure(1);
 subplot(1,2,1)
 plot(t*1e6,real(CHIRPdat(:,echoChoice)));
 xlabel('time [us]')
@@ -133,17 +133,29 @@ subplot(1,2,2)
 plot(z,2*abs(T2Dprofiles(:,echoChoice)),'LineWidth',1.5);
 xlabel('real space [um]')
 title('Plot of first T2-D FFT Profile and Echo')
+pubgraph(ff1,8,1,'w','Arial')
 
-figure(2)
+ff2 = figure(2);
+subplot(4,1,1)
+hold on
+plot(z,sum(abs(T2Dprofiles),2),'-r');
+line([-sliceheight*1e3/2 -sliceheight*1e3/2],[0 max(sum(abs(T2Dprofiles),2))])
+line([sliceheight*1e3/2 1e3*sliceheight/2],[0 max(sum(abs(T2Dprofiles),2))])
+axis off
+
+subplot(4,1,[2 3 4])
 surf(echoVec'/1000,z,abs(T2Dprofiles));
-shading flat;
-title('Surface plot of T2-D FFT Profiles')
-xlabel('T2 [ms]')
-ylabel('z [um]')
-view([0 90])
+xlim([min(echoVec)/1000 max(echoVec/1000)]);
+ylim([min(z) max(z)]);
+shading interp;
+% title('Surface plot of T2-D FFT Profiles')
+xlabel('acq time/ms')
+ylabel('z/\mum')
+view([90 -90])
+pubgraph(ff2,8,1,'w','Arial')
 
 %% No CHIRP load section
-close all
+% close all
 if strcmp(spectrometer,'Tecmag')==1;
     [~ , spec] = readTecmag4d(strcat(datadir,noCHIRPfile,'.tnt'));
 elseif strcmp(spectrometer,'Kea')==1;
@@ -176,15 +188,70 @@ plot(z,2*abs(CPprofiles(:,echoChoice)),'LineWidth',1.5);
 xlabel('real space [um]')
 title('Plot of first reference FFT Profile and Echo')
 
-figure(4)
-surf(echoVec'/1000,z,abs(CPprofiles));
-shading flat;
-title('Surface plot of reference FFT Profile')
-xlabel('T2 [ms]')
-ylabel('z [um]')
-view([0 90])
+% figure(4)
+% surf(echoVec'/1000,z,abs(CPprofiles));
+% shading flat;
+% title('Surface plot of reference FFT Profile')
+% xlabel('T2 [ms]')
+% ylabel('z [um]')
+% view([0 90])
 
-hh = figure(5);
+
+
+
+% 
+% ff4 = figure(4);
+% subplot(3,3,1)
+% hold on
+% plot(z,sum(abs(CPprofiles),2),'-k');
+% line([-sliceheight*1e3/2 -sliceheight*1e3/2],[0 max(sum(abs(CPprofiles),2))])
+% line([sliceheight*1e3/2 1e3*sliceheight/2],[0 max(sum(abs(CPprofiles),2))])
+% axis off
+% 
+% subplot(3,3,2)
+% hold on
+% plot(z,sum(abs(T2Dprofiles),2),'-r');
+% line([-sliceheight*1e3/2 -sliceheight*1e3/2],[0 max(sum(abs(T2Dprofiles),2))])
+% line([sliceheight*1e3/2 1e3*sliceheight/2],[0 max(sum(abs(T2Dprofiles),2))])
+% axis off
+% 
+% subplot(3,3,[4 7])
+% surf(echoVec'/1000,z,abs(CPprofiles));
+% xlim([min(echoVec)/1000 max(echoVec/1000)]);
+% ylim([min(z) max(z)]);
+% shading interp;
+% % title('Surface plot of T2-D FFT Profiles')
+% xlabel('acq time/ms')
+% ylabel('z/\mum')
+% view([90 -90])
+% 
+% subplot(3,3,[5 8])
+% surf(echoVec'/1000,z,abs(T2Dprofiles));
+% xlim([min(echoVec)/1000 max(echoVec/1000)]);
+% ylim([min(z) max(z)]);
+% shading interp;
+% % title('Surface plot of T2-D FFT Profiles')
+% % xlabel('acq time/ms')
+% ylabel('z/\mum')
+% view([90 -90])
+% % pubgraph(ff4,8,1,'w','Arial')
+% 
+% subplot(3,3,3)
+% hold on
+% plot(z,sum(abs(CPprofiles),2)/max(abs(CPprofiles(:,echoChoice))),'linewidth',2,'color','k')
+% plot(z,sum(abs(T2Dprofiles),2)/max(abs(CPprofiles(:,echoChoice))),'linewidth',2,'color','r')
+% line([-sliceheight*1e3/2 -sliceheight*1e3/2],[0 2])
+% line([sliceheight*1e3/2 1e3*sliceheight/2],[0 2])
+% % ylim([0 1.2])
+% hold off
+% xlabel('z/\mum','fontsize',12)
+% set(gca,'Fontsize',12,'linewidth',2)
+% legend('reference','CHIRP')
+% pubgraph(ff4,8,1,'w','Arial')
+
+
+
+ff5 = figure(5);
 hold on
 plot(z,abs(CPprofiles(:,echoChoice))/max(abs(CPprofiles(:,echoChoice))),'linewidth',2,'color','k')
 plot(z,abs(T2Dprofiles(:,echoChoice))/max(abs(CPprofiles(:,echoChoice))),'linewidth',2,'color','r')
@@ -192,11 +259,70 @@ line([-sliceheight*1e3/2 -sliceheight*1e3/2],[0 2])
 line([sliceheight*1e3/2 1e3*sliceheight/2],[0 2])
 ylim([0 1.2])
 hold off
-xlabel('z [um]','fontsize',12)
-title('T2-D and coil reference profiles')
+xlabel('z/\mum','fontsize',12)
+% title('T2-D and coil reference profiles')
 set(gca,'Fontsize',12,'linewidth',2)
-legend('ref','exp')
-pubgraph(hh,14,2,'w','Arial')
+legend('reference','CHIRP')
+pubgraph(ff5,8,1,'w','Arial')
+
+
+%%
+ff4 = figure(4);
+subplot(3,2,1)
+surf(echoVec'/1000,z,abs(CPprofiles));
+xlim([min(echoVec)/1000 max(echoVec/1000)]);
+ylim([-300 300]);
+% ylim([min(z) max(z)]);
+shading interp;
+ylabel('z/\mum')
+view([0 90])
+
+subplot(3,2,2)
+hold on
+plot(sum(abs(CPprofiles),2),z,'-k');
+ylim([-300 300]);
+% set(gca','YDir','reverse')
+axis off
+
+
+subplot(3,2,3)
+surf(echoVec'/1000,z,abs(T2Dprofiles));
+xlim([min(echoVec)/1000 max(echoVec/1000)]);
+ylim([-300 300]);
+% ylim([min(z) max(z)]);
+shading interp;
+xlabel('acq time/ms')
+ylabel('z/\mum')
+view([0 90])
+
+subplot(3,2,4)
+hold on
+plot(sum(abs(T2Dprofiles),2),z,'-r');
+ylim([-300 300]);
+% set(gca','YDir','reverse')
+axis off
+
+
+subplot(3,2,[5 6])
+hold on
+plot(z,sum(abs(CPprofiles),2)/max(abs(CPprofiles(:,echoChoice))),'linewidth',2,'color','k')
+plot(z,sum(abs(T2Dprofiles),2)/max(abs(CPprofiles(:,echoChoice))),'linewidth',2,'color','r')
+line([-sliceheight*1e3/2 -sliceheight*1e3/2],[0 25])
+line([sliceheight*1e3/2 1e3*sliceheight/2],[0 25])
+ylim([0 25])
+hold off
+xlabel('z/\mum','fontsize',12)
+set(gca,'Fontsize',12,'linewidth',2)
+legend('reference','CHIRP','Location','NorthWest')
+
+% % fig = gcf;
+% ff4.PaperUnits = 'centimeters';
+% ff4.PaperPosition = [0 0 8.5 24];
+
+pubgraph(ff4,12,2,'w','Times New Roman')
+set(gcf,'Position',[9 242 468 736])
+print('C:\Users\tkmeldrum\Google Drive\Manuscripts\Preparation\T2D_2017\T2D Paper Figures\EchoFig.eps','-depsc','-r0')
+print('C:\Users\tkmeldrum\Google Drive\Manuscripts\Preparation\T2D_2017\T2D Paper Figures\EchoFig.png','-dpng','-r0')
 
 %% Coil Sensitivity Correction
 
@@ -245,7 +371,7 @@ deltaFig = 2*Pchirp*(BWchirp/2-f)/BWchirp + deltaMin; % expression for delta(eff
 wurstAmp = 1-(cos(pi*(t1_fig7)/Pchirp)).^40;
 
 
-ylimits = [0 3];
+ylimits = [0 1];
 deltaEff = 2*t1_fig7 ;
 % deltaEff = delta - t1_fig7 - preCHIRPdelay;
 deltaEff = fliplr(deltaEff);
@@ -303,8 +429,8 @@ ylim(ylimits)
 xlabel('z (um)')
 %% Data Range and Inversion
 
-minind = 212; %min(ptIndex);
-maxind = 302; %max(ptIndex); 
+minind = 89; %min(ptIndex);
+maxind = 163; %max(ptIndex); 
 
 
 
