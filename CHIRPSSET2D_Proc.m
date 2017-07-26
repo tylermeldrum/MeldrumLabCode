@@ -614,44 +614,4 @@ save(strcat(datadir,datafile, '_vaxisRC.dat'), 'vIndex_RC', '-ascii')
 % title('$\it{D}-\it{T}_2$ correlation','FontSize',16,'interpreter','latex');
 % pubgraph(hh,16,2,'w','mwa_cmr10')
 
-%% Recreate the data for a two-component system
-
-
-
-% D1 = 1.53411; %x10-9 m2/s
-% T21 = 0.0852742; %s
-% A1 = 0.97;
-% 
-% D2 = 0.121306; %%x10-9 m2/s
-% T22 = 0.0283681; %s
-% 
-% 
-% dStart = exp((-A1*D1 + -(1-A1)*D2)*vIndex_RC);
-% T2decay = exp(-(A1*t2axis/T21 + (1-A1)*t2axis/T22));
-% for ii = 1:length(dStart)
-%     SS(ii,:) = dStart(ii)*T2decay;
-% end
-% SS = SS/max(max(SS));
-% 
-% 
-% zrange = [0 1];
-% yrange = [min(vIndex_RC) max(vIndex_RC)];
-% xrange = [min(t2axis) max(t2axis)];
-% 
-% figure(11)
-% ax1 = subplot(2,2,1);
-% surf(t2axis,vIndex_RC,SS)
-% xlim(xrange); ylim(yrange); zlim(zrange);
-% shading flat
-% ax2 = subplot(2,2,2);
-% surf(t2axis,vIndex_RC,T2Ddat);
-% xlim(xrange); ylim(yrange); zlim(zrange);
-% shading flat
-% ax3 = subplot(2,2,3);
-% surf(t2axis,vIndex_RC,SS-T2Ddat);
-% xlim(xrange); ylim(yrange); zlim([-1 1]);
-% shading flat
-% 
-% hlink = linkprop([ax1,ax2,ax3],{'CameraPosition','CameraUpVector'}); 
-% rotate3d on
 
