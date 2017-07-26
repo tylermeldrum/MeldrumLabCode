@@ -12,22 +12,22 @@ close all
 
 spectrometer = 'Tecmag'; %'Tecmag' OR 'Kea'
 
-datadir = 'C:\CommonData\ADF\Summer 17\Gly Test\Grids\';
-datafile = 'Gly_16_CHIRP_1_12JUL2017_result'; %\1\data'; 
-noCHIRPfile = 'Gly_16_noCHIRP_1_12JUL2017_result'; %\1\data'; 
+datadir = 'C:\CommonData\ADF\Summer 17\EtyGly_Acetone\';
+datafile = 'EtGlyREGCHIRP_6_25JUL2017_result'; %\1\data'; 
+noCHIRPfile = 'EtGlyREGnoCHIRP_6_25JUL2017_result'; %\1\data'; 
 
-Pchirp = 1977e-6;                  % CHIRP Pulse Length (s)
+Pchirp = 477e-6;                  % CHIRP Pulse Length (s)
 pw     = 6e-6;                      % hard pulse length
 sliceheight = 0.300;                % mm
 
 rampPct = 0.0;                     % percent for the CHIRP power ramp to reach pMax
 
 
-nPts = 78;                          % # of acqu points
+nPts = 152;                          % # of acqu points
 
 omitPtsBack = 0;                    % the number of points at the end of each echo window that are zeros from the spectrometer
 omitPtsFront = 0;                    % the number of points at the beginning of each echo window to zero
-nEchoes = 128;                      % Echoes
+nEchoes = 512;                      % Echoes
 omitEchoes = 0;                     % number of echoes to remove from dat0
 echoChoice = 2;                     %the echo to use for display purposes
 
@@ -36,7 +36,7 @@ tE = 700e-6;                           % us
 preCHIRPdelay = 20e-6;             % s
 noisePoints = 2;                    % number of points for measuring noise
 
-nScans = 4096;                     % Number of scans in the experiment
+nScans = 1;                     % Number of scans in the experiment
 cutRefPts = 0;                     %if necessary, can cut the data from the reference scan by half this value on each end of the acq window
                                     %use only if nPts for CHIRP on and CHIRP off expts don't match
 
@@ -48,8 +48,8 @@ apofac = 5;                         % Amount of Apodizatio
 
 
 
-delta = 4e-3;                       % little delta time (s)
-DELTA = 25e-3;                       % Big delta time in s
+delta = 1e-3;                       % little delta time (s)
+DELTA = 20e-3;                       % Big delta time in s
 
 
 % ===================================
@@ -245,7 +245,7 @@ deltaFig = 2*Pchirp*(BWchirp/2-f)/BWchirp + deltaMin; % expression for delta(eff
 wurstAmp = 1-(cos(pi*(t1_fig7)/Pchirp)).^40;
 
 
-ylimits = [0 3];
+ylimits = [0 2];
 deltaEff = 2*t1_fig7 ;
 % deltaEff = delta - t1_fig7 - preCHIRPdelay;
 deltaEff = fliplr(deltaEff);
@@ -303,8 +303,8 @@ ylim(ylimits)
 xlabel('z (um)')
 %% Data Range and Inversion
 
-minind = 212; %min(ptIndex);
-maxind = 302; %max(ptIndex); 
+minind = 443; %min(ptIndex);
+maxind = 631; %max(ptIndex); 
 
 
 

@@ -3,17 +3,17 @@ clc
 close all
 
 %%
-filename = 'Glycerol_CPMG_middle_12JUL2017_result.tnt'; %Input experiment file name
-filedir = 'C:\CommonData\ADF\Summer 17\Gly Test\Gly CPMG\'; %Copy file path
+filename = 'Cu_CPMG_14JUL2017.tnt '; %Input experiment file name
+filedir = 'C:\CommonData\ADF\Summer 17\Gly Test\Gly Cu H2O\'; %Copy file path
 
 alpha = 1e7;
 lowLim = 1e-3; %s
 hiLim = 1e0;  %s
 
-tEcho = 700; %Echotime (us)
+tEcho = 500; %Echotime (us)
 nEchoes = 128; %Number of echoes
 omitpoints = 0;
-nPts = 304; % Number of acquisition points
+nPts = 154; % Number of acquisition points
 nPtsBlank = 0; %Don't touch
 tD = 2e-6; %dwell time, (s)
 
