@@ -5,9 +5,9 @@ close all
 %%
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = 'Z:\Data\JYU\CPMG (summer 2017)\6July\IvoryBlack_overnight\';
+filedir = '/Users/tyler/Desktop/M001_2/';
 
-nMeas = 16;
+nMeas = 1900;
 nSmooth = 21;
 
 omitEchoes = 0; %front-end echoes to omit
