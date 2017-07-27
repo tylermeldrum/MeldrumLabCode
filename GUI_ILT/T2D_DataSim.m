@@ -54,7 +54,6 @@ function T2D_DataSim_OpeningFcn(hObject, eventdata, handles, varargin)
 
 clc
 
-% global RC_on Reg_on AmpA AmpB T1A T1B T2A T2B DA DB delta DELTA tE nEchoes G n SNR;
 % Create the data to plot.
 handles.peaks=peaks(35);
 axes(handles.axes1);
@@ -478,6 +477,7 @@ handles.T2Ddata= T2Ddata;
 
 guidata(hObject, handles);
 
+axes(handles.axes1)
 surf(1000*echoVec,v,T2Ddata)
 xlim([0 1000*max(echoVec)]);
 ylim([min(v) max(v)]);
@@ -539,6 +539,57 @@ function ILTGo_Callback(hObject, eventdata, handles)
 % hObject    handle to ILTGo (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% "a" = "h" and "b" = "v"
+% acquisition of the parameters of the nnls smoothing process
+alpha = str2double(get(handles.alpha,'string'));
+Thmin = str2double(get(handles.T2lowlim,'string'));
+Thmax = str2double(get(handles.T2highlim,'string'));
+Thmm = [Thmin, Thmax];
+steps = str2double(get(handles.nSteps,'string'));
+
+Tvmin = str2double(get(handles.Dlowlim,'string'));
+Tvmax = str2double(get(handles.Dhighlim,'string'));
+Tvmm = [Tvmin, Tvmax];
+
+
+data = handles.T2Ddata;
+timea = handles.echoVec;
+timeb = handles.v;
+kernel1 = 'exp(-h/T)';
+kernel2 = 'exp(-v*D)';
+
+[spectrum,tauh,tauv,~,~]=upnnlsmooth3Dsvdfin(data,timea',timeb',Thmm,steps,Tvmm,steps,alpha,-1,'b',kernel1,kernel2);
+
+spectrum = flip(spectrum,1);
+% tauv = 1./tauv;
+% tauv = flip(tauv,2);
+tauv = (1./tauv)';
+taulv = -log10(tauv);
+stb = size(taulv);
+
+taulh = log10(tauh);
+sta = size(taulh);
+
+
+axes(handles.axes2);
+surf(taulh,taulv,spectrum)
+shading interp;
+% axis([taulh(1),taulh(sta(2)),taulv(1),taulv(stb(2))]);
+xmarks=(taulh(sta(1)):1:taulh(sta(2)));
+ymarks=(taulv(stb(2)):1:taulv(stb(1)));
+view([0 90])
+
+for aa = 0:range(xmarks)-2
+    line([xmarks(aa+2) xmarks(aa+2)],[min(ymarks) max(ymarks)],[max(max(spectrum)) max(max(spectrum))],'LineStyle','--','LineWidth',2,'Color','w');
+end
+
+for aa = 0:range(ymarks)-2
+    line([min(xmarks) max(xmarks)],[ymarks(aa+2) ymarks(aa+2)],[max(max(spectrum)) max(max(spectrum))],'LineStyle','--','LineWidth',2,'Color','w');
+end
+    
+    
+
 
 
 

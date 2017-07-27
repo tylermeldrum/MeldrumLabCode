@@ -7,7 +7,7 @@ function varargout = TwoDLaplaceInverse(varargin)
 %    FIG = TWODLAPLACEINVERSE launch TwoDLaplaceInverse GUI.
 %    TWODLAPLACEINVERSE('callback_name', ...) invoke the named callback.
 
-% Last Modified by GUIDE v2.5 27-Nov-2008 11:29:06
+% Last Modified by GUIDE v2.5 26-Jul-2017 19:11:29
 
 % Last modified 03-Dec-2008 by Marcel Gratz (Matlab 2008a)
 % - fixed label representations in new figures
@@ -1717,6 +1717,3 @@ function edit38_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-
