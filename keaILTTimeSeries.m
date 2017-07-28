@@ -6,15 +6,17 @@ close all
 filename = 'data.2d';
 filedir = 'Z:\Data\AST\BalsaWood\CDDSol\Xylene\Sample17A_Dry\';
 
-nMeas = 200;
+nMeas = 1;
 G = 23.87; %T/m
-zf = 1; %levels of zero-filling
+zf = 2; %levels of zero-filling
+
+alpha = 1e8;
+T2lims = [1e-5 1e-2];
 
 omitEchoes = 0; %front-end echoes to omit
-guess = [0 0.003 0.08]; %[y-offset, amplitude, T2 in s]
 
-t0 = datetime('26-Jul-2017 20:34:00');
-tEnd = datetime('27-Jul-2017 9:11:00');
+t0 = datetime('27-Jul-2017 18:24:00');
+tEnd = datetime('27-Jul-2017 22:51:00');
 % END USER-DEFINED PARAMETERS
 
 tElapsed = tEnd - t0;
@@ -23,8 +25,6 @@ measT = linspace(t0,tEnd,nMeas);
 
 gamma = 42.576;                     % MHz T-1
 gammaRad = gamma*2*pi*1e6;          % rad s-1 T-1
-M=0;
-
 
 
 %%
@@ -38,6 +38,7 @@ for nn = 1:nMeas
     nrEchoes = ap.yDim;
     nrPts = ap.xDim;
     
+        
     T = tD;                             % Sample time
     Fs = 1/T;                           % Sampling frequency
     L = (nrPts)*(2^zf);          % Length of signal
@@ -55,36 +56,47 @@ for nn = 1:nMeas
 
     FTT2 = (fftshift(fft(FTdat,NFFT)/L, 1)); % Performs FFT algorithm
     
-    signalSum(:,nn) = abs(sum(FTT2,2));
-    
-  
-    
-    for ll = 1:L
-         figure(1)
-         subplot(ceil(sqrt(L)),ceil(sqrt(L)),ll)
-         plot(echoVec,abs(FTT2(ll,:)))
-         %M = abs(FTT2(ll,:));
-         
-        
-         %[beta,R,J,~] = nlinfit(echoVec,abs(FTT2(ll,:)), @t2monofit, guess);
-         %ci = nlparci(beta,R,'jacobian',J);
-         %guess = beta;
-         %coeffs(ll,:) = beta;
+    for mm = 1:L
+        [ILTspec(mm,:,nn), tau, ~] = upnnlsmooth1D(abs(FTT2(mm,:)'), echoVec', T2lims(1), T2lims(2), alpha, -1, nrEchoes-omitEchoes, 'exp(-h/T)');
     end
-    
-    
-
 end
+    
 %%
-close all
+for nn = 1:nMeas 
+    figure(1)
+    subplot(ceil(nMeas/ceil(sqrt(nMeas))),ceil(sqrt(nMeas)),nn)
+    surf(tau,z,ILTspec(:,:,nn))
+    set(gca,'XScale','log')
+    set(gca,'YDir','reverse')
+    xlabel('T2 [s]')
+    ylabel('position [um]')
+    ylim([min(z) max(z)])
+    xlim(T2lims)
+    shading interp
+    view([0 90])
+    title(num2str(nn))
+%     axis tight manual
+%     axis off
+end
 
-hh = figure(2);
-hold on
-surf(measT,z,signalSum)
-set(gca,'YDir','reverse')
-shading interp
-ylim([-400 400])
-xlabel('time')
-ylabel('z [um] (<0 topspace)')
-title(strcat('FT time series, time interval = ',datestr(measT(2)-measT(1),'MM'),':',datestr(measT(2)-measT(1),'SS')))
-pubgraph(hh,14,1,'w','Arial')
+%%
+figure(2)
+ax = gca;
+ax.NextPlot = 'replaceChildren';
+
+
+F(nMeas) = struct('cdata',[],'colormap',[]);
+for j = 1:nMeas
+surf(tau,z,ILTspec(:,:,j))
+    set(gca,'XScale','log')
+    set(gca,'YDir','reverse')
+    xlabel('T2 [s]')
+    ylabel('position [um]')
+    ylim([min(z) max(z)])
+    xlim(T2lims)
+    shading interp
+    view([0 90])
+%     title(num2str(j))
+    drawnow
+    F(j) = getframe;
+end

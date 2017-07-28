@@ -5,7 +5,7 @@ close all
 %%
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = 'Z:\Data\JYU\CPMG (summer 2017)\6July\IvoryBlack_overnight\';
+filedir = 'Z:\Data\JYU\CPMG (summer 2017)\26July\P250.2015e_acetone_overnight\';
 
 nMeas = 16;
 nSmooth = 21;
@@ -14,8 +14,8 @@ omitEchoes = 0; %front-end echoes to omit
 
 guess = [0 1 0.008]; %[y-offset, amplitude, T2 in s]
 
-t0 = datetime('06-Jul-2017 17:01:00');
-tEnd = datetime('07-Jul-2017 09:15:00');
+t0 = datetime('26-Jul-2017 20:34:00');
+tEnd = datetime('27-Jul-2017 09:11:00');
 % END USER-DEFINED PARAMETERS
 
 tElapsed = tEnd - t0;
