@@ -4,14 +4,14 @@ close all
 %%
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = 'Z:\Data\AST\BalsaWood\CDDSol\Xylene\Sample17A_Dry\';
+filedir = 'Z:\Data\JYU\CPMG (summer 2017)\28July\P250\';
 
-nMeas = 1;
+nMeas = 126;
 G = 23.87; %T/m
-zf = 2; %levels of zero-filling
+zf = 0; %levels of zero-filling
 
 alpha = 1e8;
-T2lims = [1e-5 1e-2];
+T2lims = [1e-4 1e-1];
 
 omitEchoes = 0; %front-end echoes to omit
 
@@ -62,32 +62,33 @@ for nn = 1:nMeas
 end
     
 %%
-for nn = 1:nMeas 
-    figure(1)
-    subplot(ceil(nMeas/ceil(sqrt(nMeas))),ceil(sqrt(nMeas)),nn)
-    surf(tau,z,ILTspec(:,:,nn))
-    set(gca,'XScale','log')
-    set(gca,'YDir','reverse')
-    xlabel('T2 [s]')
-    ylabel('position [um]')
-    ylim([min(z) max(z)])
-    xlim(T2lims)
-    shading interp
-    view([0 90])
-    title(num2str(nn))
-%     axis tight manual
-%     axis off
-end
+% for nn = 1:nMeas 
+%     figure(1)
+%     subplot(ceil(nMeas/ceil(sqrt(nMeas))),ceil(sqrt(nMeas)),nn)
+%     surf(tau,z,ILTspec(:,:,nn))
+%     set(gca,'XScale','log')
+%     set(gca,'YDir','reverse')
+%     xlabel('T2 [s]')
+%     ylabel('position [um]')
+%     ylim([min(z) max(z)])
+%     xlim(T2lims)
+%     shading interp
+%     view([0 90])
+%     title(num2str(nn))
+% %     axis tight manual
+% %     axis off
+% end
 
 %%
 figure(2)
+set(gcf,'Color','w')
 ax = gca;
 ax.NextPlot = 'replaceChildren';
 
 
-F(nMeas) = struct('cdata',[],'colormap',[]);
+% F(nMeas) = struct('cdata',[],'colormap',[]);
 for j = 1:nMeas
-surf(tau,z,ILTspec(:,:,j))
+contour(tau,z,ILTspec(:,:,j))
     set(gca,'XScale','log')
     set(gca,'YDir','reverse')
     xlabel('T2 [s]')
@@ -98,5 +99,24 @@ surf(tau,z,ILTspec(:,:,j))
     view([0 90])
 %     title(num2str(j))
     drawnow
-    F(j) = getframe;
+%     frame = getframe;
+    F{j} = frame2im(getframe(figure(2)));
 end
+
+figure(5)
+surf(zeros(2,2))
+view([0 90])
+G = frame2im(getframe(figure(5)));
+%%
+filename = strcat(filedir,'gifout.gif'); % Specify the output file name
+for idx = 1:nMeas
+    [A,map] = rgb2ind(F{idx},256);
+    if idx == 1
+        imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.1);
+    else
+        imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.1);
+    end
+end
+
+[A,map] = rgb2ind(G,256);
+imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',2);

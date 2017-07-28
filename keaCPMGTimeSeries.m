@@ -5,10 +5,10 @@ close all
 %%
 % USER-DEFINED PARAMETERS
 filename = 'data.2d';
-filedir = 'Z:\Data\JYU\CPMG (summer 2017)\26July\P250.2015e_acetone_overnight\';
+filedir = fullfile('Z:','Data','JYU','CPMG (summer 2017)','26July','P250.2015e_acetone_overnight');
 
 
-nMeas = 1900;
+nMeas = 60;
 nSmooth = 21;
 
 omitEchoes = 0; %front-end echoes to omit
@@ -26,8 +26,8 @@ T2 = zeros(nMeas,2);
 
 %%
 for nn = 1:nMeas
-    fileloc = strcat(filedir,num2str(nn-1),'/',filename);
-    parloc  = strcat(filedir,num2str(nn-1),'/','acqu.par');
+    fileloc = fullfile(filedir,num2str(nn-1),filename);
+    parloc  = fullfile(filedir,num2str(nn-1),'acqu.par');
     
     [ap,spec] = readKea4d(fileloc);
     tE = readpar_Kea(parloc,'echoTime')*1e-6;
