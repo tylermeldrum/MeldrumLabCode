@@ -22,7 +22,7 @@ function varargout = T2D_DataSim(varargin)
 
 % Edit the above text to modify the response to help T2D_DataSim
 
-% Last Modified by GUIDE v2.5 26-Jul-2017 16:44:08
+% Last Modified by GUIDE v2.5 28-Jul-2017 15:24:46
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -442,6 +442,11 @@ function generate_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % handles= guidata(hObject);  
 
+set(handles.Com1_2, 'ForegroundColor', 'black');
+set(handles.Com1_3, 'ForegroundColor', 'black');
+set(handles.Com2_2, 'ForegroundColor', 'black');
+set(handles.Com2_3, 'ForegroundColor', 'black');
+
 AmpA = str2double(get(handles.AmpA, 'string'));
 AmpB = str2double(get(handles.AmpB, 'string'));
 
@@ -461,6 +466,43 @@ nEchoes = str2double(get(handles.nEchoes, 'string'));
 G = str2double(get(handles.G, 'string'));
 n = str2double(get(handles.n, 'string'));
 SNR = str2double(get(handles.SNR, 'string'));
+gamma = 42.577*1e6*2*pi; %rad T-1 s-1
+
+Com1_1 = 1e-9*(1/6)*DA*gamma^2*G^2*delta^3;
+Com1_2 = 2*delta/T2A;
+Com1_3 = DELTA/T1A;
+
+
+threshpct = str2double(get(handles.threshpct, 'string'))/100;
+
+
+if Com1_2/Com1_1 >= threshpct
+    set(handles.Com1_2, 'ForegroundColor', 'red');
+end
+
+if Com1_3/Com1_1 >= threshpct
+    set(handles.Com1_3, 'ForegroundColor', 'red');
+end
+
+set(handles.Com1_1, 'string', Com1_1);
+set(handles.Com1_2, 'string', Com1_2);
+set(handles.Com1_3, 'string', Com1_3);
+
+if AmpB ~= 0
+    Com2_1 = 1e-9*(1/6)*DB*gamma^2*G^2*delta^3;
+    Com2_2 = 2*delta/T2B;
+    Com2_3 = DELTA/T1B;
+    set(handles.Com2_1, 'string', Com2_1);
+    set(handles.Com2_2, 'string', Com2_2);
+    set(handles.Com2_3, 'string', Com2_3);
+    if Com2_2/Com2_1 >= threshpct
+        set(handles.Com2_2, 'ForegroundColor', 'red');
+    end
+
+    if Com2_3/Com2_1 >= threshpct
+        set(handles.Com2_3, 'ForegroundColor', 'red');
+    end
+end
 
 RC_on = get(handles.RC, 'value');
 Reg_on = get(handles.Reg, 'value');
@@ -470,6 +512,9 @@ if RC_on == 1 && Reg_on == 0
 elseif RC_on == 0 && Reg_on == 1
     [echoVec,v,T2Ddata] = Reg_T2Dsim(AmpA, T2A, DA, AmpB, T2B, DB, delta, DELTA, tE, nEchoes, n, G, SNR);
 end
+
+
+
 
 handles.echoVec= echoVec;
 handles.v= v;
@@ -812,6 +857,227 @@ function Dvalue_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function Dvalue_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to Dvalue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function Com2_2_Callback(hObject, eventdata, handles)
+% hObject    handle to Com2_2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Com2_2 as text
+%        str2double(get(hObject,'String')) returns contents of Com2_2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Com2_2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Com2_2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function Com2_3_Callback(hObject, eventdata, handles)
+% hObject    handle to Com2_3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Com2_3 as text
+%        str2double(get(hObject,'String')) returns contents of Com2_3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Com2_3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Com2_3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function Com1_2_Callback(hObject, eventdata, handles)
+% hObject    handle to Com1_2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Com1_2 as text
+%        str2double(get(hObject,'String')) returns contents of Com1_2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Com1_2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Com1_2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function Com1_3_Callback(hObject, eventdata, handles)
+% hObject    handle to Com1_3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Com1_3 as text
+%        str2double(get(hObject,'String')) returns contents of Com1_3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Com1_3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Com1_3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function Com1_1_Callback(hObject, eventdata, handles)
+% hObject    handle to Com1_1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Com1_1 as text
+%        str2double(get(hObject,'String')) returns contents of Com1_1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Com1_1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Com1_1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function Com2_1_Callback(hObject, eventdata, handles)
+% hObject    handle to Com2_1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Com2_1 as text
+%        str2double(get(hObject,'String')) returns contents of Com2_1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Com2_1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Com2_1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function threshpct_Callback(hObject, eventdata, handles)
+% hObject    handle to threshpct (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of threshpct as text
+%        str2double(get(hObject,'String')) returns contents of threshpct as a double
+set(handles.Com1_2, 'ForegroundColor', 'black');
+set(handles.Com1_3, 'ForegroundColor', 'black');
+set(handles.Com2_2, 'ForegroundColor', 'black');
+set(handles.Com2_3, 'ForegroundColor', 'black');
+
+AmpA = str2double(get(handles.AmpA, 'string'));
+AmpB = str2double(get(handles.AmpB, 'string'));
+
+T1A = 1e-3* str2double(get(handles.T1A, 'string'));
+T1B = 1e-3* str2double(get(handles.T1B, 'string'));
+
+T2A = 1e-3* str2double(get(handles.T2A, 'string'));
+T2B = 1e-3* str2double(get(handles.T2B, 'string'));
+
+DA = str2double(get(handles.DA, 'string'));
+DB = str2double(get(handles.DB, 'string'));
+
+delta = 1e-3* str2double(get(handles.delta, 'string'));
+DELTA = 1e-3* str2double(get(handles.DELTA, 'string'));
+tE = 1e-6* str2double(get(handles.tE, 'string'));
+nEchoes = str2double(get(handles.nEchoes, 'string'));
+G = str2double(get(handles.G, 'string'));
+n = str2double(get(handles.n, 'string'));
+SNR = str2double(get(handles.SNR, 'string'));
+gamma = 42.577*1e6*2*pi; %rad T-1 s-1
+
+Com1_1 = 1e-9*(1/6)*DA*gamma^2*G^2*delta^3;
+Com1_2 = 2*delta/T2A;
+Com1_3 = DELTA/T1A;
+
+
+threshpct = str2double(get(handles.threshpct, 'string'))/100;
+
+
+if Com1_2/Com1_1 >= threshpct
+    set(handles.Com1_2, 'ForegroundColor', 'red');
+end
+
+if Com1_3/Com1_1 >= threshpct
+    set(handles.Com1_3, 'ForegroundColor', 'red');
+end
+
+set(handles.Com1_1, 'string', Com1_1);
+set(handles.Com1_2, 'string', Com1_2);
+set(handles.Com1_3, 'string', Com1_3);
+
+if AmpB ~= 0
+    Com2_1 = 1e-9*(1/6)*DB*gamma^2*G^2*delta^3;
+    Com2_2 = 2*delta/T2B;
+    Com2_3 = DELTA/T1B;
+    set(handles.Com2_1, 'string', Com2_1);
+    set(handles.Com2_2, 'string', Com2_2);
+    set(handles.Com2_3, 'string', Com2_3);
+    if Com2_2/Com2_1 >= threshpct
+        set(handles.Com2_2, 'ForegroundColor', 'red');
+    end
+
+    if Com2_3/Com2_1 >= threshpct
+        set(handles.Com2_3, 'ForegroundColor', 'red');
+    end
+end
+
+% --- Executes during object creation, after setting all properties.
+function threshpct_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to threshpct (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
