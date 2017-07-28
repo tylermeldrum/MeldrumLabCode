@@ -3,21 +3,21 @@ clc
 close all
 
 %%
-datadir = 'C:\CommonData\ADF\Summer 17\Testing2\';
-datafile = 'EtGlyWater_TRAD_1_05JUL2017';
+datadir = 'C:\CommonData\ADF\Summer 17\EtyGly_Acetone\';
+datafile = 'EtGyAcetoneSWITCHEDRCT2Dtrad_3_21JUL2017';
 
 
-nPts = 72;                          % # of acqu points
+nPts = 152;                          % # of acqu points
 omitPts = 0;                        % the number of points that are zeros from the spectrometer
 nEchoes = 512;                      % Echoes
 omitEchoes = 0;                     % numner of echoes to remove from data
 tD = 4e-6;                          % dwell time (Tecmag shows correct dwell time for a complex point, no need to multiply by 2)
-tE = 398;                           % us
+tE = 700;                           % us
 deltaMin = 0.1e-6;                  % s
 deltaMax = 988e-6;                 % s
 lin = 1;                            % 1 if delta is linearly spaced, 0 if log spaced
 delta = 1e-3;                     % s
-DELTA = 8e-3;                      % s
+DELTA = 20e-3;                      % s
 noisePoints = 2;                   % number of points for measuring noise
 noiseNumber = 1;                    % scan number to use for determining SNR
 G = 6.59;                           % T m-1, B0 field gradient

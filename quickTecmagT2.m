@@ -3,15 +3,15 @@ clc
 close all
 
 %%
-filename = 'GlycerolLarge_CPMG_11Apr2016_1';
-filedir = 'C:\CommonData\Glycerol\';
+filename = 'Acetone_CPMG_3_25JUL2017';
+filedir = 'C:\CommonData\ADF\Summer 17\EtyGly_Acetone\';
 fileloc = strcat(filedir,filename);
 
 [ap,spec,spec2,spec3,spec4] = readTecmag4d(strcat(fileloc,'.tnt'));
 
-tEcho = 400; %us
-nEchoes = 256;
-nPts = 54;
+tEcho = 700; %us
+nEchoes = 128;
+nPts = 304;
 nPtsBlank = 0;
 
 %% SNR calc

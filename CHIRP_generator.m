@@ -9,7 +9,7 @@ close all
 % tic
 
 dt = 200e-9;             % time per point in waveform (s) [Scout limit is 20ns]
-tau = 1.977e-3;            % pulse length (s)
+tau = .477e-3;            % pulse length (s)
 sliceheight = 0.300;     % mm
 
 

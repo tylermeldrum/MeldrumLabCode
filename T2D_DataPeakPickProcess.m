@@ -7,9 +7,9 @@ close all
 %stuff), and number of points in inverted data.
 
 
-datadir = 'C:\CommonData\TKM\Gouda\';
-datafile = 'CHIRP_4_10May2017_result.dat.out';
-T2lims = [1e-3 1e0];
+datadir = 'C:\CommonData\ADF\Summer 17\Ethylene Glycol\';
+datafile = 'EtGlyCHIRP_2_1JUN2017_result.dat.out';
+T2lims = [1e-4 1e0];
 Dlims = [1e-11 1e-8];
 
 contourLevel = 0.80;

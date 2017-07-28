@@ -7,7 +7,8 @@ close all
 filename = 'data.2d';
 filedir = 'Z:\Data\JYU\CPMG (summer 2017)\26July\P250.2015e_acetone_overnight\';
 
-nMeas = 16;
+
+nMeas = 1900;
 nSmooth = 21;
 
 omitEchoes = 0; %front-end echoes to omit

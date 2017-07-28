@@ -3,8 +3,8 @@ clc
 close all
 
 %%
-filename = 'Glycerol_CPMG_middle_12JUL2017_result.tnt'; %Input experiment file name
-filedir = 'C:\CommonData\ADF\Summer 17\Gly Test\Gly CPMG\'; %Copy file path
+filename = 'EtGyAcetoneSWITCHEDRCT2Dtrad_2_19JUL2017.tnt'; %Input experiment file name
+filedir = 'C:\CommonData\ADF\Summer 17\EtyGly_Acetone\'; %Copy file path
 fileloc = strcat(filedir,filename);
 
 [ap,spec,spec2,spec3,spec4] = readTecmag4d(fileloc);
@@ -12,10 +12,10 @@ fileloc = strcat(filedir,filename);
 zf = 2; %zero filling... Don't touch
 
 tEcho = 700; %Echotime (us)
-nEchoes = 128; %Number of echoes
-nPts = 304; % Number of acquisition points
+nEchoes = 512; %Number of echoes
+nPts = 152; % Number of acquisition points
 nPtsBlank = 0; %Don't touch
-tD = 2e-6; %dwell time, (s)
+tD = 4e-6; %dwell time, (s)
 
 
 G = 6.59;                           % Gradient (T m-1)

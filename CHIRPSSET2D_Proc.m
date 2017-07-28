@@ -23,11 +23,11 @@ sliceheight = 0.200;                % mm
 rampPct = 0.01;                     % percent for the CHIRP power ramp to reach pMax
 
 
-nPts = 54;                          % # of acqu points
+nPts = 152;                          % # of acqu points
 
 omitPtsBack = 0;                    % the number of points at the end of each echo window that are zeros from the spectrometer
 omitPtsFront = 0;                    % the number of points at the beginning of each echo window to zero
-nEchoes = 64;                      % Echoes
+nEchoes = 512;                      % Echoes
 omitEchoes = 0;                     % number of echoes to remove from dat0
 echoChoice = 1;                     %the echo to use for display purposes
 
@@ -48,8 +48,8 @@ apofac = 5;                         % Amount of Apodizatio
 
 
 
-delta = 400e-6;                       % little delta time (s)
-DELTA = 5e-3;                       % Big delta time in s
+delta = 1e-3;                       % little delta time (s)
+DELTA = 20e-3;                       % Big delta time in s
 
 
 % ===================================
@@ -429,8 +429,8 @@ ylim(ylimits)
 xlabel('z (um)')
 %% Data Range and Inversion
 
-minind = 89; %min(ptIndex);
-maxind = 163; %max(ptIndex); 
+minind = 443; %min(ptIndex);
+maxind = 631; %max(ptIndex); 
 
 
 
@@ -614,44 +614,4 @@ save(strcat(datadir,datafile, '_vaxisRC.dat'), 'vIndex_RC', '-ascii')
 % title('$\it{D}-\it{T}_2$ correlation','FontSize',16,'interpreter','latex');
 % pubgraph(hh,16,2,'w','mwa_cmr10')
 
-%% Recreate the data for a two-component system
-
-
-
-% D1 = 1.53411; %x10-9 m2/s
-% T21 = 0.0852742; %s
-% A1 = 0.97;
-% 
-% D2 = 0.121306; %%x10-9 m2/s
-% T22 = 0.0283681; %s
-% 
-% 
-% dStart = exp((-A1*D1 + -(1-A1)*D2)*vIndex_RC);
-% T2decay = exp(-(A1*t2axis/T21 + (1-A1)*t2axis/T22));
-% for ii = 1:length(dStart)
-%     SS(ii,:) = dStart(ii)*T2decay;
-% end
-% SS = SS/max(max(SS));
-% 
-% 
-% zrange = [0 1];
-% yrange = [min(vIndex_RC) max(vIndex_RC)];
-% xrange = [min(t2axis) max(t2axis)];
-% 
-% figure(11)
-% ax1 = subplot(2,2,1);
-% surf(t2axis,vIndex_RC,SS)
-% xlim(xrange); ylim(yrange); zlim(zrange);
-% shading flat
-% ax2 = subplot(2,2,2);
-% surf(t2axis,vIndex_RC,T2Ddat);
-% xlim(xrange); ylim(yrange); zlim(zrange);
-% shading flat
-% ax3 = subplot(2,2,3);
-% surf(t2axis,vIndex_RC,SS-T2Ddat);
-% xlim(xrange); ylim(yrange); zlim([-1 1]);
-% shading flat
-% 
-% hlink = linkprop([ax1,ax2,ax3],{'CameraPosition','CameraUpVector'}); 
-% rotate3d on
 
