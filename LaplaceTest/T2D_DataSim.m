@@ -22,7 +22,7 @@ function varargout = T2D_DataSim(varargin)
 
 % Edit the above text to modify the response to help T2D_DataSim
 
-% Last Modified by GUIDE v2.5 28-Jul-2017 23:33:06
+% Last Modified by GUIDE v2.5 31-Jul-2017 22:43:29
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -524,6 +524,9 @@ G = str2double(get(handles.G, 'string'));
 n = str2double(get(handles.n, 'string'));
 SNR = str2double(get(handles.SNR, 'string'));
 gamma = 42.577*1e6*2*pi; %rad T-1 s-1
+alpha = (gamma*G)^2;
+
+sigAtten = str2double(get(handles.sigAtten, 'string'));
 
 Com1_1 = 1e-9*(1/6)*DA*gamma^2*G^2*delta^3;
 Com1_2 = 2*delta/T2A;
@@ -581,7 +584,8 @@ elseif RC_on == 0 && Reg_on == 1
     [echoVec,v,T2Ddata] = Reg_T2Dsim(AmpA, T2A, DA, AmpB, T2B, DB, delta, DELTA, tE, nEchoes, n, G, SNR);
 end
 
-
+Dmin = 1e9*(6*(log(sigAtten) + DELTA/min(T1A,T1B) + (2*delta)/min(T2A,T2B)))/(alpha*(delta^3/8 - delta^2*((3*DELTA)/2 + (3*delta)/4)));
+set(handles.Dmincalc, 'string', Dmin);
 
 
 handles.echoVec= echoVec;
@@ -1191,6 +1195,52 @@ function rmin_delta_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function rmin_delta_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to rmin_delta (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function sigAtten_Callback(hObject, eventdata, handles)
+% hObject    handle to sigAtten (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of sigAtten as text
+%        str2double(get(hObject,'String')) returns contents of sigAtten as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function sigAtten_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sigAtten (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function Dmincalc_Callback(hObject, eventdata, handles)
+% hObject    handle to Dmincalc (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Dmincalc as text
+%        str2double(get(hObject,'String')) returns contents of Dmincalc as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Dmincalc_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Dmincalc (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
