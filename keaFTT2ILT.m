@@ -3,11 +3,17 @@ clc
 close all
 
 % USER-DEFINED PARAMETERS
+filedir = 'Z:\Data\MRB\CPMG\17_July_2017_100%PEGDA_2%HCPK_1%PPh3\100%_30s_Slide4\3\';
+filetitle = '30 s, 100 pwr, 1PPh3';
+
 filename = 'data.2d';
-filedir = 'Z:\Data\MRB\CPMG\28_July_2017_100%PEGDA_2%HCPK_2%PPh3\8s_20%\4\';
 omitEchoes = 0; %front-end echoes to omit
 G = 23.87; %T/m
 zf = 2; %levels of zero-filling
+alpha = 1e8;
+T2lims = [1e-4 1e1];
+ILTpoints = 25;
+poslims = [-35 35];
 % END USER-DEFINED PARAMETERS
 
 
@@ -20,6 +26,7 @@ tD = readpar_Kea(parloc,'dwellTime')*1e-6;
 nrEchoes = ap.yDim;
 nrPts = ap.xDim;
 
+nILTpts = min((nrEchoes-omitEchoes),ILTpoints);
 echoVec = (omitEchoes+1)*tE:tE:nrEchoes*tE;
 spec2d = reshape(spec,nrPts,nrEchoes);
 spec2d = spec2d(:,omitEchoes+1:end);
@@ -40,44 +47,37 @@ z = f/(gamma*G);                    % um, 280.47 Hz/um (for PM25)
 FTdat = padarray(spec2d, size(spec2d(:,1),1)/2*((2^zf)-1),0); % Pad with 0's
 
 FTT2 = (fftshift(fft(FTdat,NFFT)/L, 1)); % Performs FFT algorithm
+ILTspec = zeros(nILTpts,L);
 
-% save('Z:\Data\Hamada Samples\Camphene\CPMG\FTCampheneTile\Camphene\z.mat','z');
-% save('Z:\Data\Hamada Samples\Camphene\CPMG\FTCampheneTile\Camphene\FTdat18.mat','FTT2');
+for jj = 1:L
+    [ILTspec(:,jj), tau, ~] = upnnlsmooth1D(abs(FTT2(jj,:)'), echoVec', T2lims(1), T2lims(2), alpha, -1, nILTpts, 'exp(-h/T)');
+end
 
 
+%%
 % Plot CHIRP results
-figure(1)
-subplot(1,2,1)
-plot(t*1e6,real(FTdat(:,1)));
-xlabel('time [us]')
+hh = figure(1);
+set(gcf,'Position',[680 580 940 400])
 subplot(1,2,2)
-plot(z,2*abs(FTT2(:,1)),'LineWidth',1.5);
-xlabel('real space [um]')
-title('Plot of first T2-D FFT Profile and Echo')
+surf(z,tau,ILTspec)
+shading interp
+set(gca,'YScale','log')
+view([90 -90])
+xlabel('position [um]')
+ylabel('T2 [s]')
+yticks(10.^(log10(T2lims(1)):1:log10(T2lims(2))))
+xlim(poslims)
+title(filetitle)
+ylim([min(tau) max(tau)])
+subplot(1,2,1)
+surf(z,1000*echoVec,abs(FTT2)')
+shading interp
+ylim([0 1000*max(echoVec)])
+view([90 -90])
+xlabel('position [um]')
+xlim(poslims)
+ylabel('time domain [ms]')
 
-figure(2)
-surf(echoVec'*1e3,z,abs(FTT2));
-shading flat;
-title('Surface plot of T2-D FFT Profiles')
-xlabel('T2 [ms]')
-ylabel('z [um]')
-view([0 90])
+pubgraph(hh,14,1,'w','Arial')
 
-[C,I] = max(abs(FTT2));
-
-figure(3)
-scatter(echoVec,abs(FTT2(I(1),:)));
-% guess = [0.4 1 7]; %T2 in ms
-% [beta,R,J,CovB] = nlinfit(1e-3*spec(:,1),spec(:,2)./spec(1,2), @t2bifit_ampSumFixed, guess);
-% ci = nlparci(beta,R,'jacobian',J);
-% 
-% ypred = t2bifit_ampSumFixed(beta,1e-3*spec(:,1));
-% 
-% hh = figure(1);
-% hold on
-% scatter(1e-3*spec(:,1),spec(:,2)./spec(1,2));
-% plot(1e-3*spec(:,1),ypred,'-r');
-% xlabel('time/ms')
-% % pubgraph(hh, 16, 2, 'w')
-% 
-% sprintf('T2 = %f +/- %.1g ms.',beta(2), beta(2)-ci(2,1))
+print(strcat(filedir,filetitle,'.png'),'-dpng')

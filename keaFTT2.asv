@@ -8,6 +8,7 @@ filedir = 'Z:\Data\MRB\CPMG\28_July_2017_100%PEGDA_2%HCPK_2%PPh3\8s_20%\4\';
 omitEchoes = 0; %front-end echoes to omit
 G = 23.87; %T/m
 zf = 2; %levels of zero-filling
+alpha = 1e7;
 % END USER-DEFINED PARAMETERS
 
 
@@ -40,6 +41,10 @@ z = f/(gamma*G);                    % um, 280.47 Hz/um (for PM25)
 FTdat = padarray(spec2d, size(spec2d(:,1),1)/2*((2^zf)-1),0); % Pad with 0's
 
 FTT2 = (fftshift(fft(FTdat,NFFT)/L, 1)); % Performs FFT algorithm
+
+
+[ILTspec(mm,:,nn), tau, ~] = upnnlsmooth1D(abs(FTT2(mm,:)'), echoVec', T2lims(1), T2lims(2), alpha, -1, nrEchoes-omitEchoes, 'exp(-h/T)');
+
 
 % save('Z:\Data\Hamada Samples\Camphene\CPMG\FTCampheneTile\Camphene\z.mat','z');
 % save('Z:\Data\Hamada Samples\Camphene\CPMG\FTCampheneTile\Camphene\FTdat18.mat','FTT2');
