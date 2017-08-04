@@ -3,7 +3,7 @@ clc
 close all
 
 % USER-DEFINED PARAMETERS
-filedir = 'Z:\Data\MRB\CPMG\17_July_2017_100%PEGDA_2%HCPK_1%PPh3\100%_30s_Slide4\3\';
+filedir = '/Volumes/ISC1026/Data/MRB/CPMG/17_July_2017_100%PEGDA_2%HCPK_1%PPh3/100%_30s_Slide4/3/';
 filetitle = '30 s, 100 pwr, 1PPh3';
 
 filename = 'data.2d';
@@ -62,7 +62,7 @@ subplot(1,2,2)
 surf(z,tau,ILTspec)
 shading interp
 set(gca,'YScale','log')
-view([90 -90])
+view([90 90])
 xlabel('position [um]')
 ylabel('T2 [s]')
 yticks(10.^(log10(T2lims(1)):1:log10(T2lims(2))))
@@ -73,7 +73,7 @@ subplot(1,2,1)
 surf(z,1000*echoVec,abs(FTT2)')
 shading interp
 ylim([0 1000*max(echoVec)])
-view([90 -90])
+view([90 90])
 xlabel('position [um]')
 xlim(poslims)
 ylabel('time domain [ms]')
