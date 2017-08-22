@@ -3,6 +3,7 @@ clc
 close all
 
 % USER-DEFINED PARAMETERS
+
 filedir = '/Users/tyler/Google Drive/Data/NGA_Aug2017/Raw Data/Eraser/FTRefStandard/1/';
 filetitle = 'EraserStandard';
 
@@ -62,7 +63,7 @@ subplot(1,2,2)
 surf(z,tau,ILTspec)
 shading interp
 set(gca,'YScale','log')
-view([90 -90])
+view([90 90])
 xlabel('position [um]')
 ylabel('T2 [s]')
 yticks(10.^(log10(T2lims(1)):1:log10(T2lims(2))))
@@ -73,7 +74,7 @@ subplot(1,2,1)
 surf(z,1000*echoVec,abs(FTT2)')
 shading interp
 ylim([0 1000*max(echoVec)])
-view([90 -90])
+view([90 90])
 xlabel('position [um]')
 % xlim(poslims)
 ylabel('time domain [ms]')
