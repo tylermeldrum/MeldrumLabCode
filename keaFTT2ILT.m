@@ -3,17 +3,17 @@ clc
 close all
 
 % USER-DEFINED PARAMETERS
-filedir = 'Z:\Data\MRB\CPMG\17_July_2017_100%PEGDA_2%HCPK_1%PPh3\100%_30s_Slide4\3\';
-filetitle = '30 s, 100 pwr, 1PPh3';
+filedir = '/Users/tyler/Google Drive/Data/NGA_Aug2017/Raw Data/Eraser/FTRefStandard/1/';
+filetitle = 'EraserStandard';
 
 filename = 'data.2d';
 omitEchoes = 0; %front-end echoes to omit
 G = 23.87; %T/m
 zf = 2; %levels of zero-filling
 alpha = 1e8;
-T2lims = [1e-4 1e1];
+T2lims = [1e-5 1e2];
 ILTpoints = 25;
-poslims = [-35 35];
+% poslims = [-35 35];
 % END USER-DEFINED PARAMETERS
 
 
@@ -66,7 +66,7 @@ view([90 -90])
 xlabel('position [um]')
 ylabel('T2 [s]')
 yticks(10.^(log10(T2lims(1)):1:log10(T2lims(2))))
-xlim(poslims)
+% xlim(poslims)
 title(filetitle)
 ylim([min(tau) max(tau)])
 subplot(1,2,1)
@@ -75,7 +75,7 @@ shading interp
 ylim([0 1000*max(echoVec)])
 view([90 -90])
 xlabel('position [um]')
-xlim(poslims)
+% xlim(poslims)
 ylabel('time domain [ms]')
 
 pubgraph(hh,14,1,'w','Arial')
